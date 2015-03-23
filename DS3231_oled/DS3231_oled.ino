@@ -13,7 +13,7 @@ char zidingyi[60] = "Copyright lxm. All rights reserved.";
 DS3231 Clock;
 bool Century = false, h12 = false, PM;
 long ds, dd;
-int n = 14, y = 10, r = 1, h = 0, m = 0, s = 0;
+int n = 15, y = 10, r = 12, h = 0, m = 0, s = 0;
 int second, minute, hour, date, month, year, temperature;
 float humidity, temp;
 
@@ -195,5 +195,5 @@ void loop()
     Serial.println(zidingyi);
   }
   }
- sleep_cpu();
+// sleep_cpu();
 }
