@@ -3,7 +3,7 @@
 #include <U8glib.h>
 #include <DHT.h>
 #include<EEPROM.h>
-#include<avr/sleep.h>
+//#include<avr/sleep.h>
 DHT dht;
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);
 extern uint8_t SmallFont[];
@@ -129,10 +129,10 @@ void setup() {
     for(i=0;i<=EEPROM.read(100)&&i<60;i++)
     zidingyi[i]=EEPROM.read(101+i);
   }
-  pinMode(2,INPUT);
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);sleep_enable();
-  Clock.enableOscillator(true,false,0);
-  attachInterrupt(0, test, CHANGE);
+  //pinMode(2,INPUT);
+  //set_sleep_mode(SLEEP_MODE_PWR_DOWN);sleep_enable();
+  //Clock.enableOscillator(true,false,0);
+  //attachInterrupt(0, test, CHANGE);
 }
 void test()
 {
