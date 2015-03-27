@@ -10,6 +10,7 @@ void setup() {
   Serial.begin(115200);
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
+  attachInterrupt(1, jishu, FALLING);
 }
 long s;
 void jishu() {
@@ -32,8 +33,8 @@ void setspeed(int inspd) {
     digitalWrite(5, LOW);
     analogWrite(6, inspd);
   } else if (inspd < 0) {
-    analogWrite(5, inspd);
-    digitalWrite(6, LOW);
+    digitalWrite(5, HIGH);
+    analogWrite(6, inspd);
   } else {
     digitalWrite(5, LOW);
     digitalWrite(6, LOW);
@@ -53,7 +54,6 @@ void loop() {
   {
     char bufchar = Serial.read();
     if (bufchar == 'w') {
-      setdir(0);
       setspeed(50);
     }
     else if (bufchar == 's') {
@@ -67,6 +67,7 @@ void loop() {
       setdir(30);
     } else if (bufchar == 'x') {
       setspeed(0);
+      setdir(0);
     }
   }
 }
