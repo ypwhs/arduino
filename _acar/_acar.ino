@@ -1,6 +1,7 @@
 #include <Servo.h>
 Servo myservo;
 int offset = 45;
+// 
 void setup() {
   pinMode(5, OUTPUT); pinMode(6, OUTPUT);
   digitalWrite(5, LOW);
@@ -12,7 +13,7 @@ void setup() {
   pinMode(3, INPUT_PULLUP);
   attachInterrupt(1, jishu, FALLING);
 }
-long s;
+long s=0;
 void jishu() {
   if (PIND & 0X04) {
     s++;
@@ -45,7 +46,7 @@ void loop() {
   long nowtime = millis();
   if (nowtime - lasttime > 10) {
     long delta = s - last;
-    Serial.println(delta);
+    Serial.println(s);
     last = s;
     lasttime = nowtime;
   }
