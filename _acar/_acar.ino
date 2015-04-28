@@ -1,14 +1,28 @@
 #include <Servo.h>
+#include <SoftwareSerial.h>
+
 Servo myservo;
+//SoftwareSerial mySerial(9, 10);
 int offset = 45;
+int speed_max = 80;
 // 
 void setup() {
-  pinMode(5, OUTPUT); pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  digitalWrite(7, HIGH);
+  digitalWrite(8, HIGH);
+  
+  pinMode(5, OUTPUT); 
+  pinMode(6, OUTPUT);
   digitalWrite(5, LOW);
   digitalWrite(6, LOW);
+  
   myservo.attach(11);
   myservo.write(45);
+  
   Serial.begin(115200);
+  //mySerial.begin(115200);
+  
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
   attachInterrupt(1, jishu, FALLING);
@@ -46,7 +60,7 @@ void loop() {
   long nowtime = millis();
   if (nowtime - lasttime > 10) {
     long delta = s - last;
-    Serial.println(s);
+    Serial.println(delta);
     last = s;
     lasttime = nowtime;
   }
@@ -55,11 +69,11 @@ void loop() {
   {
     char bufchar = Serial.read();
     if (bufchar == 'w') {
-      setspeed(50);
+      setspeed(speed_max);
     }
     else if (bufchar == 's') {
       setdir(0);
-      setspeed(-50);
+      setspeed(-speed_max);
     }
     else if (bufchar == 'a') {
       setdir(-30);
