@@ -2,6 +2,9 @@
 dht DHT;
 #define DHT11_PIN 8
 
+#include <IRremote.h>
+IRsend irsend;
+
 void setup() {
   // put your setup code here, to run once:
   int i;
@@ -25,11 +28,13 @@ void loop() {
       for (i = 4; i < 7; i++) {
         digitalWrite(i, HIGH);
       }
-    }else if(a == 5){
+    } else if (a == 5) {
       Serial.print("温度:");
-      Serial.print(DHT.temperature,1);
+      Serial.print(DHT.temperature, 1);
       Serial.print(",湿度:");
-      Serial.println(DHT.humidity,1);
+      Serial.println(DHT.humidity, 1);
+    } else if (a == 6) {
+      irsend.sendNEC(0xFFA25D, 32);
     }
   }
 }
