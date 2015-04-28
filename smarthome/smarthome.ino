@@ -1,3 +1,7 @@
+#include <dht.h>
+dht DHT;
+#define DHT11_PIN 8
+
 void setup() {
   // put your setup code here, to run once:
   int i;
@@ -9,6 +13,7 @@ void setup() {
 }
 void loop() {
   // put your main code here, to run repeatedly:
+  int chk = DHT.read11(DHT11_PIN);
   if (Serial.available()) {
     char a = Serial.read();
     Serial.print(a);
@@ -20,6 +25,11 @@ void loop() {
       for (i = 4; i < 7; i++) {
         digitalWrite(i, HIGH);
       }
+    }else if(a == 5){
+      Serial.print("温度:");
+      Serial.print(DHT.temperature,1);
+      Serial.print(",湿度:");
+      Serial.println(DHT.humidity,1);
     }
   }
 }
