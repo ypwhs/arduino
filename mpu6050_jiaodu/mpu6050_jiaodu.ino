@@ -4,10 +4,10 @@
 
 float X_jiaodu=-6;
 long s=0,last=0;
-float P = 20, D = 0.012;
+float P = 20, D = 0.012; //PID调参数位置
 //====================
 MPU6050 accelgyro;
-int DIR1 = 7, PWM1 = 6, PWM2 = 5, DIR2 = 4;
+int DIR1 = 7, PWM1 = 6, PWM2 = 5, DIR2 = 4; //驱动板引脚定义
 int16_t ax, ay, az;
 int16_t gx, gy, gz; //存储原始数据
 float aax, aay, aaz, ggx, ggy, ggz; //存储量化后的数据
@@ -37,8 +37,9 @@ void set(int a)
   }
 }
 void jishu(){
-if(PIND&0X04)s++;
-else s--;
+  //正交解码
+  if(PIND&0X04)s++;
+  else s--;
 }
 void setup()//MPU6050的设置都采用了默认值，请参看库文件
 {
@@ -48,9 +49,9 @@ void setup()//MPU6050的设置都采用了默认值，请参看库文件
   pinMode(DIR2, OUTPUT);
   pinMode(PWM1, OUTPUT);
   pinMode(PWM2, OUTPUT);
-  pinMode(2,INPUT);
+  pinMode(2,INPUT); //编码器引脚初始化
   digitalWrite(DIR1, LOW);
-  digitalWrite(DIR2, LOW);
+  digitalWrite(DIR2, LOW); //首先默认输出低电平防止电机转动
   pinMode(LED_PIN, OUTPUT);
   delay(500);
   Wire.begin();
@@ -63,12 +64,12 @@ void setup()//MPU6050的设置都采用了默认值，请参看库文件
   Ax = ax / 16384.00;
   Ay = ay / 16384.00;
   Az = az / 16384.00;
-  Angel_accZ = atan(Az / sqrt(Ax * Ax + Ay * Ay)) * 180 / 3.14;
-  Gx = -Angel_accZ;
+  Angel_accZ = atan(Az / sqrt(Ax * Ax + Ay * Ay)) * 180 / 3.14; //这部分是空间几何知识
+  Gx = -Angel_accZ; //首先初始化的时候Gx先设置为加速度换算出来的角度
   Serial.println(Gx);
-  if (!(Gx < 180 && Gx > -180))setup();
+  if (!(Gx < 180 && Gx > -180))setup(); //有问题的话就重新初始化一下
   digitalWrite(13,1);
-  //attachInterrupt(1, jishu, RISING);
+  //attachInterrupt(1, jishu, RISING); //这里是编码器计数中断
 }
 char rec;
 int speed;
@@ -92,16 +93,15 @@ void loop()
   //===============以下是对角度进行积分处理====== ==========
   NowTime = millis(); //获取当前程序运行的毫秒数
   TimeSpan = NowTime - LastTime; //积分时间这样算不是很严谨
-  //下面三行就是通过对角速度积分实现各个轴的角度测量，当然假设各轴的起始角度都是0
-  Gx = (Gx + ggx * TimeSpan / 1000)*0.995-0.005*Angel_accZ;
   LastTime = NowTime;
+  //下面这行是互补滤波,短期来看陀螺仪很准,所以比重是99.5%,但是陀螺仪有累积误差,所以需要加速度来互补,这里用减号是因为加速度算出来方向是反的
+  Gx = (Gx + ggx * TimeSpan / 1000)*0.995-0.005*Angel_accZ;
   int spd;
-  //X_jiaodu-=speed/100.0;
   spd = (Gx - X_jiaodu) * P - ggx * D;
   if (abs(spd)<250)set(spd);
   else {
     set(0);
-   /* while (1)
+   /* while (1) //等待串口传回数据再接着跑
       if (Serial.read() > 0) {
         setup();
         break;
