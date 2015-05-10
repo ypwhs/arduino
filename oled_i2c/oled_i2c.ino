@@ -15,31 +15,33 @@ void WriteData(unsigned char dat)
 }
 void IIC_SetPos(unsigned char x, unsigned char y)
 {
-  WriteCommand(0xb0+y);
-  WriteCommand(((x&0xf0)>>4)|0x10);//|0x10
-  WriteCommand((x&0x0f)|0x01);//|0x01
+  WriteCommand(0xb0 + y);
+  WriteCommand(((x & 0xf0) >> 4) | 0x10); //|0x10
+  WriteCommand((x & 0x0f) | 0x01); //|0x01
 }
 //全屏显示 -- Fill_Screen(0x00,0x00)可用作清屏
-void Fill_Screen(unsigned char dat1,unsigned char dat2)
+void Fill_Screen(unsigned char dat1, unsigned char dat2)
 {
-   unsigned char x,y;
+  unsigned char x, y;
 
-     WriteCommand(0x02);    /*set lower column address*/       
-     WriteCommand(0x10);    /*set higher column address*/
-     WriteCommand(0xB0);    /*set page address*/
-     for(y=0;y<8;y++)
-        {
-           WriteCommand(0xB0+y);    /*set page address*/
-           WriteCommand(0x02);    /*set lower column address*/       
-           WriteCommand(0x10);    /*set higher column address*/
-           for(x=0;x<64;x++)
-             {
-              WriteData(dat1);
-              WriteData(dat2);
-             }
-       }
+  WriteCommand(0x02);    /*set lower column address*/
+  WriteCommand(0x10);    /*set higher column address*/
+  WriteCommand(0xB0);    /*set page address*/
+  for (y = 0; y < 8; y++)
+  {
+    WriteCommand(0xB0 + y);  /*set page address*/
+    WriteCommand(0x02);    /*set lower column address*/
+    WriteCommand(0x10);    /*set higher column address*/
+
+    for (x = 0; x < 64; x++)
+    {
+      WriteData(dat1);
+      WriteData(dat2);
+    }
+
+  }
 }
-void initial(){
+void initial() {
   WriteCommand(0xAE);    /*display off*/
 
   WriteCommand(0x02);    /*set lower column address*/
@@ -70,7 +72,7 @@ void initial(){
   WriteCommand(0x00);   /*   0x20  */
 
   WriteCommand(0xD5);    /*set osc division*/
-  WriteCommand(0x80);    
+  WriteCommand(0x80);
 
   WriteCommand(0xD9);    /*set pre-charge period*/
   WriteCommand(0x1f);    /*0x22*/
@@ -79,7 +81,7 @@ void initial(){
   WriteCommand(0x12);//0x02 -- duanhang xianshi,0x12 -- lianxuhang xianshi!!!!!!!!!
 
   WriteCommand(0xdb);    /*set vcomh*/
-  WriteCommand(0x40);     
+  WriteCommand(0x40);
 
 
   WriteCommand(0xAF);    /*display ON*/
@@ -87,18 +89,60 @@ void initial(){
 
 void setup() {
   // put your setup code here, to run once:
-  delay(200);
   Wire.begin();
   initial();
-  Fill_Screen(0x00,0x00);
+  Fill_Screen(0x00, 0x00);
+  Serial.begin(115200);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  IIC_SetPos(10,10);
-  WriteData(0xFF);
+  //IIC_SetPos(10,10);
+  int i, j, k;
+  for(i=0;i<128;i+=10)
+  {
+  for (j = 0; j < 8; j++) {
+      IIC_SetPos(i, j);
+      WriteData(0xFF);
+      WriteData(0xFF);
+      WriteData(0xFF);
+      WriteData(0xFF);
+      WriteData(0xFF);WriteData(0xFF);
+    delay(16);
+  }
+    for (j = 7; j >= 0; j--) {
+      IIC_SetPos(i+5, j);
+      WriteData(0xFF);
+      WriteData(0xFF);
+      WriteData(0xFF);
+      WriteData(0xFF);
+      WriteData(0xFF);WriteData(0xFF);
+    delay(16);
+  }
+  }
+
   delay(500);
-  IIC_SetPos(10,10);
-  WriteData(0x00);
+  
+  for(i=0;i<128;i+=10)
+  {
+  for (j = 0; j < 8; j++) {
+      IIC_SetPos(i, j);
+      WriteData(0);
+      WriteData(0);
+      WriteData(0);
+      WriteData(0);
+      WriteData(0);WriteData(0);
+    delay(16);
+  }
+    for (j = 7; j >= 0; j--) {
+      IIC_SetPos(i+5, j);
+      WriteData(0);
+      WriteData(0);
+      WriteData(0);
+      WriteData(0);
+      WriteData(0);WriteData(0);
+    delay(16);
+  }
+  }
   delay(500);
 }
