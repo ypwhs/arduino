@@ -38,7 +38,6 @@ void Fill_Screen(unsigned char dat1, unsigned char dat2)
       WriteData(dat1);
       WriteData(dat2);
     }
-
   }
 }
 void initial() {
