@@ -1,7 +1,7 @@
 int TrigPin = 2;
 int EchoPin = 3;
 float cm;
-int id = 2;
+int id = 1;
 void setup() 
 {
 Serial.begin(115200); 
