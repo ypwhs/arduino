@@ -19,7 +19,9 @@ void setup() {
 }
 char a[25] = "Smart Parking";
 char b[25] = "Powered.";
-char c[25] = "By YPW.";
+char c[25] = "Zhou Aide.";
+char d[25] = "BTBU.";
+char* text[] = {0,a,b,c,d};
 int i=0;
 void refresh()
 {
@@ -27,15 +29,16 @@ void refresh()
 do{
   //u8g.setFont(u8g_font_6x12);
   u8g.setFont(u8g_font_helvR12);
-  u8g.drawStr( 0,13,a);
-  u8g.drawStr( 0,13*2.4,b);
-  u8g.drawStr( 0,13*4,c);
+  u8g.drawStr( 0,16,a);
+  u8g.drawStr( 0,16*2,b);
+  u8g.drawStr( 0,16*3,c);
+  u8g.drawStr( 0,16*4,d);
 }
 while( u8g.nextPage() );
 }
 
-int n=1;int MAX=2;
-int d[10]={0};
+int n=1;int MAX=4;
+int distance[10]={0};
 long last=0, now=0;
 void loop() {
   Serial.print("ask:[");
@@ -50,13 +53,12 @@ void loop() {
     Serial.readBytesUntil(10,buffer, 20);
     int cm=0,cm2=0,id=0,i=0;
     sscanf(buffer,"[%d]%d.%dcm",&id,&cm,&cm2);
-    if(id==1)sprintf(a,"[%d]%d.%dcm",id,cm,cm2);
-    else if(id==2)sprintf(b,"[%d]%d.%dcm",id,cm,cm2);
-    //else sprintf(a,"[%d]%d.%dcm",id,cm,cm2);
-    if(cm<7)d[id]=1;else d[id]=0;
-    for(i=1;i<=MAX;i++)if(d[i]==0)break;
-    if(i>MAX)sprintf(c, "no parking");
-    else sprintf(c,"%d is OK.",i);
+    sprintf(text[id],"[%d]%d.%dcm",id,cm,cm2);
+//    else sprintf(a,"[%d]%d.%dcm",id,cm,cm2);
+//    if(cm<7)distance[id]=1;else distance[id]=0;
+//    for(i=1;i<=MAX;i++)if(distance[i]==0)break;
+//    if(i>MAX)sprintf(c, "no parking");
+//    else sprintf(c,"%d is OK.",i);
   }
   n++;if(n>MAX)n=1;
   refresh();
