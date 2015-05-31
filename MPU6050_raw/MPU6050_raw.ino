@@ -15,6 +15,8 @@ long LastTime, NowTime, TimeSpan; //用来对角速度积分的
 #define LED_PIN 13
 bool blinkState = false;
 
+int times = 0;
+
 void setup() {
   Wire.begin();
   Serial.begin(115200);
@@ -26,7 +28,7 @@ void setup() {
 }
 float xyz, xz, cosa;
 int ci;
-float GGx = 0;
+float GGx = 0, GGy = 0;
 void loop() {
   accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
   //======一下三行是对加速度进行量化，得出单位为g的加速度值
@@ -47,8 +49,13 @@ void loop() {
   LastTime = NowTime;
   //下面这行是互补滤波,短期来看陀螺仪很准,所以比重是99.5%,但是陀螺仪有累积误差,所以需要加速度来互补,这里用减号是因为加速度算出来方向是反的
   Gx = (Gx + ggx * TimeSpan / 1000);
-  GGx = (GGx + ggx * TimeSpan / 1000) * 0.995 + Angel_accZ * 0.005;
+  GGx = (GGx + ggx * TimeSpan / 1000) * 0.99 + Angel_accZ * 0.01;
+  
+  GGy = (GGy + ggy * TimeSpan / 1000) * 0.99 + Angel_accY * 0.01;
 
+  times++;
+  if(!(times%20)){
+    times = 0;
     Serial.print(Angel_accX); Serial.print("\t");
     Serial.print(Angel_accY); Serial.print("\t");
     Serial.print(Angel_accZ); Serial.print("\t");
@@ -59,6 +66,9 @@ void loop() {
     Serial.print(Gx); Serial.print("\t");
     Serial.print("GGx=");
     Serial.print(GGx); Serial.print("\t");
+    Serial.print("GGy=");
+    Serial.print(GGy); Serial.print("\t");
     Serial.println();
+  }
 
 }
