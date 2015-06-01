@@ -11,7 +11,7 @@ Servo myservo;
 
 void setup()
 {
-  myservo.attach(9);
+  myservo.attach(3);
   myservo.write(90);
   Serial.begin(115200);
   dht.setup(2);
@@ -36,6 +36,7 @@ void refreshTime() {
 char time[45], a[45];
 float humidity = 0, temperature = 0;
 long last, now;
+#define YUZHI 350
 
 void loop()
 {
@@ -69,7 +70,7 @@ void loop()
   sprintf(a, "Sensor:%4d ", sensor);
   lcd.setCursor(0, 1);
   lcd.print(a);
-  if (sensor < 450) {
+  if (sensor < YUZHI) {
     lcd.print("ON ");
   } else {
     lcd.print("OFF");
@@ -92,7 +93,7 @@ void loop()
   if ( ((hour == 11) && (minute > 30) && (minute < 35)) |
     ((hour == 17) && (minute < 5)) )
   {
-    if (sensor > 350) {
+    if (sensor > YUZHI) {
       myservo.write(60);
       delay(500);
       myservo.write(90);
