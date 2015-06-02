@@ -92,8 +92,8 @@ void loop()
     last = now;
   }
 
-  if ( ((hour == 11) && (minute > 30) && (minute < 35)) |
-    ((hour == 17) && (minute < 5)) )
+  if ( ((hour == 11) && (minute > 30)) |
+    ((hour == 17)) )
   {
     if (sensor > YUZHI) {
       myservo.write(60);
