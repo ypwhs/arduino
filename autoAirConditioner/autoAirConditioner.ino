@@ -4,6 +4,8 @@
 #include <DHT.h>
 #include <Servo.h>
 
+#define YUZHI 500
+
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 DS3231 Clock;
 DHT dht;
@@ -36,7 +38,7 @@ void refreshTime() {
 char time[45], a[45];
 float humidity = 0, temperature = 0;
 long last, now;
-#define YUZHI 350
+
 
 void loop()
 {
