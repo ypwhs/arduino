@@ -4,6 +4,8 @@
 #define uint unsigned int
 #define beep 6
 #define mada 3
+
+//D5     <------------->             RST    (这个脚不接貌似也可以)
 //D10    <------------->             SDA   (在RC522中即为CS)
 //D11    <------------->             MOSI
 //D12    <------------->             MISO
@@ -133,8 +135,8 @@ void setup()
   pinMode(chipSelectPin, OUTPUT); // Set digital pin 10 as OUTPUT to connect it to the RFID /ENABLE pin
   digitalWrite(chipSelectPin, LOW); // Activate the RFID reader
   pinMode(NRSTPD, OUTPUT); // Set digital pin 5 , Not Reset and Power-down
-pinMode(mada,OUTPUT);
-pinMode(beep,OUTPUT);
+  pinMode(mada, OUTPUT);
+  pinMode(beep, OUTPUT);
   MFRC522_Init();
 }
 
@@ -151,7 +153,7 @@ void loop()
     return;
   }
   // Show card type
-  ShowCardType(str);
+  //ShowCardType(str);
 
   //Prevent conflict, return the 4 bytes Serial number of the card
   status = MFRC522_Anticoll(str);
@@ -162,30 +164,18 @@ void loop()
   {
     //if(memcmp(serNum, str, 5))
     {
-      Serial.print("The card's number is: ");
+      //Serial.print("The card's number is: ");
       memcpy(serNum, str, 5);
       ShowCardID(serNum);
 
       // Check people associated with card ID
       uchar* id = serNum;
-      if ( id[0] == 0x5D && id[1] == 0xDA && id[2] == 0xA9 && id[3] == 0x52 ) {
-        Serial.println("Hello YPW~~~!");
+      //Serial.println("Hello unkown guy!");
+      for (i = 0; i < 2; i++) {
         digitalWrite(beep, 1);
-        digitalWrite(mada, 0);
         delay(100);
         digitalWrite(beep, 0);
-        delay(200);
-        digitalWrite(mada, 1);
-      } else if (id[0] == 0x8D && id[1] == 0x91 && id[2] == 0xE4 && id[3] == 0x74) {
-        Serial.println("Hello lhy~~~!");
-      } else {
-        Serial.println("Hello unkown guy!");
-        for (i = 0; i < 2; i++) {
-          digitalWrite(beep, 1);
-          delay(100);
-          digitalWrite(beep, 0);
-          delay(100);
-        }
+        delay(100);
       }
     }
   }
