@@ -21,9 +21,15 @@ void setup()
   lcd.backlight();
   lcd.clear();
   pinMode(A0, INPUT);
-
 }
-int second, minute, hour, date, month, year;
+void down() {
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+}
+
+int second=0, minute=0, hour=0, date=0, month=0, year=0;
 bool h12;
 bool PM;
 bool Century = false;
@@ -47,9 +53,9 @@ void loop()
   if (Serial.available() > 0)
   {
     char rec = Serial.read();
-    if ( rec == 'a')
+    if ( rec == (char)0x80)
     {
-      Serial.print("a");
+      Serial.print("Set Time:");
       delay(50);
       Serial.readBytesUntil('a', time, 45);
       Serial.println(time);
@@ -60,6 +66,16 @@ void loop()
       Clock.setDate(date);
       Clock.setMonth(month);
       Clock.setYear(year);
+    } else if (rec == (char)0x81) {
+      Serial.print("Current Time:");
+      sprintf(a, "20%02d-%02d-%02d %02d:%02d:%02d", year, month, date, hour, minute, second);
+      Serial.println(a);
+    } else if (rec == (char)0x82) {
+      Serial.print(temperature);
+    } else if (rec == (char)0x83) {
+      Serial.print(humidity);
+    } else if (rec == (char)0x84) {
+      down();
     }
   }
 
@@ -80,7 +96,6 @@ void loop()
 
   now = millis();
   if (now - last > dht.getMinimumSamplingPeriod()) {
-
     humidity = dht.getHumidity();
     temperature = dht.getTemperature();
     lcd.setCursor(0, 2);
@@ -93,13 +108,10 @@ void loop()
   }
 
   if ( ((hour == 11) && (minute > 30)) |
-    ((hour == 17)) )
+       ((hour == 17)) )
   {
     if (sensor > YUZHI) {
-      myservo.write(60);
-      delay(500);
-      myservo.write(90);
-      delay(500);
+      down();
     }
   }
 

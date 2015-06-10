@@ -2,7 +2,7 @@
 #include <string.h>
 #define uchar unsigned char
 #define uint unsigned int
-#define beep 6
+#define beep A0
 #define mada 3
 
 //D5     <------------->             RST    (这个脚不接貌似也可以)
@@ -167,10 +167,8 @@ void loop()
       //Serial.print("The card's number is: ");
       memcpy(serNum, str, 5);
       ShowCardID(serNum);
-
       // Check people associated with card ID
       uchar* id = serNum;
-      //Serial.println("Hello unkown guy!");
       for (i = 0; i < 2; i++) {
         digitalWrite(beep, 1);
         delay(100);
