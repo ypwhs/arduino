@@ -22,14 +22,16 @@ void setup()
   lcd.clear();
   pinMode(A0, INPUT);
 }
+
+#define downtime 200
 void down() {
   myservo.write(60);
-  delay(500);
+  delay(downtime);
   myservo.write(90);
-  delay(500);
+  delay(1000-downtime);
 }
 
-int second=0, minute=0, hour=0, date=0, month=0, year=0;
+int second = 0, minute = 0, hour = 0, date = 0, month = 0, year = 0;
 bool h12;
 bool PM;
 bool Century = false;
@@ -49,7 +51,7 @@ long last, now;
 void loop()
 {
   refreshTime();
-
+  int sensor = analogRead(A0);
   if (Serial.available() > 0)
   {
     char rec = Serial.read();
@@ -57,7 +59,7 @@ void loop()
     {
       Serial.print("Set Time:");
       delay(50);
-      Serial.readBytesUntil('a', time, 45);
+      Serial.readBytesUntil((char)0x80, time, 45);
       Serial.println(time);
       sscanf(time, "20%d-%d-%d %d:%d:%d", &year, &month, &date, &hour, &minute, &second);
       Clock.setSecond(second);
@@ -75,6 +77,8 @@ void loop()
     } else if (rec == (char)0x83) {
       Serial.print(humidity);
     } else if (rec == (char)0x84) {
+      Serial.print(sensor < YUZHI);
+    } else if (rec == (char)0x85) {
       down();
     }
   }
@@ -84,7 +88,6 @@ void loop()
   lcd.setCursor(0, 0);
   lcd.print(a);
 
-  int sensor = analogRead(A0);
   sprintf(a, "Sensor:%4d ", sensor);
   lcd.setCursor(0, 1);
   lcd.print(a);
