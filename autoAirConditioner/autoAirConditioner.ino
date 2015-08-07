@@ -4,7 +4,7 @@
 #include <DHT.h>
 #include <Servo.h>
 
-#define YUZHI 500
+#define YUZHI 600
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 DS3231 Clock;
