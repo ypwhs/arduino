@@ -110,8 +110,8 @@ void loop()
     last = now;
   }
 
-  if ( ((hour == 11) && (minute > 30)) |
-       ((hour == 17)) )
+  //if ( ((hour == 11) && (minute > 30)) |
+  //     ((hour == 17)) )
   {
     if (sensor > YUZHI) {
       down();
