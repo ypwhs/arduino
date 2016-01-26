@@ -35,7 +35,7 @@ RTIMUSettings settings;                               // the settings object
 
 //  DISPLAY_INTERVAL sets the rate at which results are displayed
 
-#define DISPLAY_INTERVAL  10                         // interval between pose displays
+#define DISPLAY_INTERVAL  5                         // interval between pose displays
 
 //  SERIAL_PORT_SPEED defines the speed to use for the debug serial port
 
@@ -111,11 +111,11 @@ void loop()
 //          RTMath::display("Mag:", (RTVector3&)imu->getCompass());              // compass data
             
             RTVector3 rpy = (RTVector3&)fusion.getFusionPose();
-            Serial.print(rpy.x());
+            Serial.print(rpy.x()/PI*180);
             Serial.print("\t");
-            Serial.print(rpy.y());
+            Serial.print(rpy.y()/PI*180);
             Serial.print("\t");
-            Serial.print(rpy.z());
+            Serial.print(rpy.z()/PI*180);
             Serial.print("\t");
 //            RTMath::displayRollPitchYaw("Pose:", (RTVector3&)fusion.getFusionPose()); // fused output
             

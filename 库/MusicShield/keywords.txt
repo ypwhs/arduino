@@ -1,0 +1,56 @@
+#######################################
+# Syntax Coloring Map MusicShield
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+MusicPlayer             KEYWORD1
+VS10XX                  KEYWORD1
+ctrlStatetype           KEYWORD1
+songtype                KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin(void);            KEYWORD2
+play                    KEYWORD2
+recording               KEYWORD2 
+beginMidi               KEYWORD2 
+midiDemoPlayer	        KEYWORD2
+selectControlBus        KEYWORD2
+deselectControlBus      KEYWORD2
+selectDataBus           KEYWORD2
+ddeselectDataBus        KEYWORD2
+putInReset              KEYWORD2
+releaseFromReset        KEYWORD2
+readDREQ                KEYWORD2
+writeRegister           KEYWORD2 
+readRegister            KEYWORD2
+writeData               KEYWORD2
+init                    KEYWORD2
+initForMidi             KEYWORD2
+reset                   KEYWORD2
+softReset               KEYWORD2
+loadPlugin              KEYWORD2   
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+PS_IDLE                 LITERAL1					 
+PS_PLAY                 LITERAL1                                   
+PS_PAUSE                LITERAL1                                      
+PS_RECORDING            LITERAL1   
+CS_EMPTY                LITERAL1                                     
+CS_PLAYPAUSE            LITERAL1                     
+CS_RECORDING            LITERAL1               
+CS_UP                   LITERAL1                                                       
+CS_DOWN                 LITERAL1                                                       
+CS_NEXT                 LITERAL1                                                     
+CS_PREV                 LITERAL1    
+
+
+
+

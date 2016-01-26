@@ -1,36 +1,85 @@
-int ea = 11, eb = 10, i1 = 9, i2 = 8, i3 = 7, i4 = 6;
-//I1、I2、I3、I4接口，分别用来控制两路直流电机前进、后退
-#include <SoftwareSerial.h>
-SoftwareSerial mySerial(2, 3);// RX, TX
+#include <Servo.h>
 
-void set(char a,int s)
-{
-  //设置电机的状态
-  if(s!=0){analogWrite(ea,s);analogWrite(eb,s);}
-  else {digitalWrite(ea,1);digitalWrite(eb,1);}
-  int i;
-  for (i = 6; i < 10; i++) {
-    digitalWrite(i, a % 2);
-    a /= 2;
-  }
-}
+Servo servo;
+int value = 30;
 
 void setup() {
   // put your setup code here, to run once:
-  mySerial.begin(9600);
-  int i;
-  for (i = 6; i < 12; i++)pinMode(i, OUTPUT);
-  digitalWrite(ea, HIGH);
-  digitalWrite(eb, HIGH);
-  for (i = 6; i < 10; i++)digitalWrite(i, LOW);
+  Serial.begin(115200);
+  servo.attach(9);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
+  ting();
+  servo.write(value);
+}
+
+void qian(){
+  digitalWrite(3, HIGH);
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
+  digitalWrite(7, HIGH);
+}
+
+void zuo(){
+  digitalWrite(3, HIGH);
+  digitalWrite(5, LOW);
+  digitalWrite(6, HIGH);
+  digitalWrite(7, LOW);
+}
+
+void you(){
+  digitalWrite(3, LOW);
+  digitalWrite(5, HIGH);
+  digitalWrite(6, LOW);
+  digitalWrite(7, HIGH);
+}
+
+void you2(){
+  analogWrite(3, 190);
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
+  digitalWrite(7, HIGH);
+}
+
+void hou(){
+  digitalWrite(3, LOW);
+  digitalWrite(5, HIGH);
+  digitalWrite(6, HIGH);
+  digitalWrite(7, LOW);
+}
+
+void ting(){
+  digitalWrite(3, LOW);
+  digitalWrite(5, LOW);
+  digitalWrite(7, LOW);
+  digitalWrite(6, LOW);
+}
+
+
+void xx(){
+  if(value<180)value+=10;
+  servo.write(value);
+}
+
+void zz(){
+  if(value>0)value-=10;
+  servo.write(value);
+}
+
+void serialEvent() {
+  char c = (char)Serial.read();
+  if(c=='w')qian();
+  else if(c=='a')zuo();
+  else if(c=='s')hou();
+  else if(c=='d')you();
+  else if(c=='f')you2();
+  else if(c=='x')xx();
+  else if(c=='z')zz();
+  else if(c=='t')ting();
 }
 
 void loop() {
-  char a = mySerial.read();
-  if (a == 'F')set(0b1010,0);
-  else if (a == 'B')set(0b0101,0);
-  else if (a == 'L')set(0b0110,200);
-  else if (a == 'R')set(0b1001,200);
-  else if (a == 'S')set(0,0);
-  delay(10);
+  // put your main code here, to run repeatedly:
 }
