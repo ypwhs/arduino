@@ -4,7 +4,7 @@
 #include <DHT.h>
 #include <Servo.h>
 
-#define YUZHI 600
+#define YUZHI 650
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 DS3231 Clock;
@@ -13,7 +13,7 @@ Servo myservo;
 
 void setup()
 {
-  myservo.attach(3);
+  myservo.attach(9);
   myservo.write(90);
   Serial.begin(115200);
   dht.setup(2);
@@ -28,7 +28,7 @@ void down() {
   myservo.write(60);
   delay(downtime);
   myservo.write(90);
-  delay(1000-downtime);
+  delay(1000 - downtime);
 }
 
 int second = 0, minute = 0, hour = 0, date = 0, month = 0, year = 0;
@@ -46,7 +46,6 @@ void refreshTime() {
 char time[45], a[45];
 float humidity = 0, temperature = 0;
 long last, now;
-
 
 void loop()
 {
@@ -68,17 +67,17 @@ void loop()
       Clock.setDate(date);
       Clock.setMonth(month);
       Clock.setYear(year);
-    } else if (rec == (char)0x81) {
+    } else if (rec == (char)'a') {
       Serial.print("Current Time:");
       sprintf(a, "20%02d-%02d-%02d %02d:%02d:%02d", year, month, date, hour, minute, second);
       Serial.println(a);
-    } else if (rec == (char)0x82) {
+    } else if (rec == (char)'b') {
       Serial.print(temperature);
-    } else if (rec == (char)0x83) {
+    } else if (rec == (char)'c') {
       Serial.print(humidity);
     } else if (rec == (char)0x84) {
       Serial.print(sensor < YUZHI);
-    } else if (rec == (char)0x85) {
+    } else if (rec == (char)'e') {
       down();
     }
   }
@@ -110,13 +109,13 @@ void loop()
     last = now;
   }
 
-  //if ( ((hour == 11) && (minute > 30)) |
-  //     ((hour == 17)) )
-  {
-    if (sensor > YUZHI) {
-      down();
-    }
+  lcd.setCursor(0, 3);
+  lcd.print("Powered By YPW.");
+
+  if (sensor > YUZHI) {
+    down();
   }
+
 
   delay(50);
 }
